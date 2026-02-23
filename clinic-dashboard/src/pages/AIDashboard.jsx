@@ -68,7 +68,7 @@ const AIDashboard = () => {
       <header className="dashboard-header animate-fade-in">
         <div>
           <h1 className="dashboard-title">Clinic AI Dashboard</h1>
-          <p className="dashboard-subtitle">Real-time financial risk analysis and AI recommendations</p>
+          <p className="dashboard-subtitle">Intelligent financial risk analysis and actionable recommendations</p>
         </div>
         <div className="clinic-badge">Clinic ID: #{clinicId}</div>
       </header>
@@ -93,57 +93,75 @@ const AIDashboard = () => {
         </div>
       )}
 
-      <div className="stats-grid">
-        <StatCard
-          label="Risk Level"
-          value={financialData?.risk_level || 'N/A'}
-          icon={AlertTriangle}
-          color={financialData?.risk_level === 'LOW' ? 'var(--accent)' : 'var(--danger)'}
-        />
-        <StatCard
-          label="Collection Rate"
-          value={financialData?.collection_rate !== undefined ? `${financialData.collection_rate}%` : 'N/A'}
-          icon={TrendingUp}
-          color="var(--primary)"
-        />
-        <StatCard
-          label="Pending Pct"
-          value={financialData?.pending_percentage !== undefined ? `${financialData.pending_percentage}%` : 'N/A'}
-          icon={Activity}
-          color="var(--warning)"
-        />
+      {/* Primary Focus: Chat Interface */}
+      <div className="main-chat-section">
+        <ChatWindow />
       </div>
 
-      <SectionCard title="AI Recommendations" icon={TrendingUp}>
-        <RecommendationList recommendations={recommendations} />
-      </SectionCard>
+      {/* Secondary Focus: Analysis & Predictions (Toggleable) */}
+      <div className="analysis-section-wrapper animate-fade-in">
+        <details className="analysis-details">
+          <summary className="analysis-summary glass-morphism">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <LayoutDashboard size={20} style={{ color: 'var(--primary)' }} />
+              <span style={{ fontWeight: 600, fontSize: '1.1rem' }}>View Financial Statistics & AI Predictions</span>
+            </div>
+            <div className="summary-indicator">Click to expand</div>
+          </summary>
 
-      <SectionCard title="Risk Details" icon={LayoutDashboard}>
-        <div className="risk-details">
-          <h4 style={{ marginBottom: '1rem', color: 'var(--text-muted)' }}>Underlying Issues:</h4>
-          {financialData?.reasons && financialData.reasons.length > 0 ? (
-            <ul className="reasons-list">
-              {financialData.reasons.map((reason, i) => (
-                <li key={i}>{reason}</li>
-              ))}
-            </ul>
-          ) : (
-            <p style={{ color: 'var(--text-muted)' }}>No specific issues identified.</p>
-          )}
-        </div>
-      </SectionCard>
+          <div className="analysis-content pt-6">
+            <div className="stats-grid">
+              <StatCard
+                label="Risk Level"
+                value={financialData?.risk_level || 'N/A'}
+                icon={AlertTriangle}
+                color={financialData?.risk_level === 'LOW' ? 'var(--accent)' : 'var(--danger)'}
+              />
+              <StatCard
+                label="Collection Rate"
+                value={financialData?.collection_rate !== undefined ? `${financialData.collection_rate}%` : 'N/A'}
+                icon={TrendingUp}
+                color="var(--primary)"
+              />
+              <StatCard
+                label="Pending Pct"
+                value={financialData?.pending_percentage !== undefined ? `${financialData.pending_percentage}%` : 'N/A'}
+                icon={Activity}
+                color="var(--warning)"
+              />
+            </div>
 
-      <ChatWindow />
+            <SectionCard title="AI Recommendations" icon={TrendingUp}>
+              <RecommendationList recommendations={recommendations} />
+            </SectionCard>
+
+            <SectionCard title="Risk Details" icon={LayoutDashboard}>
+              <div className="risk-details">
+                <h4 style={{ marginBottom: '1rem', color: 'var(--text-muted)' }}>Underlying Issues:</h4>
+                {financialData?.reasons && financialData.reasons.length > 0 ? (
+                  <ul className="reasons-list">
+                    {financialData.reasons.map((reason, i) => (
+                      <li key={i}>{reason}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p style={{ color: 'var(--text-muted)' }}>No specific issues identified.</p>
+                )}
+              </div>
+            </SectionCard>
+          </div>
+        </details>
+      </div>
 
       <style>{`
         .dashboard-header {
           display: flex;
           justify-content: space-between;
           align-items: flex-end;
-          margin-bottom: 3rem;
+          margin-bottom: 2rem;
         }
         .dashboard-title {
-          font-size: 2.5rem;
+          font-size: 2.2rem;
           font-weight: 700;
           background: linear-gradient(to right, #fff, #94a3b8);
           -webkit-background-clip: text;
@@ -151,7 +169,7 @@ const AIDashboard = () => {
         }
         .dashboard-subtitle {
           color: var(--text-muted);
-          margin-top: 0.5rem;
+          margin-top: 0.25rem;
         }
         .clinic-badge {
           background: rgba(255, 255, 255, 0.05);
@@ -161,6 +179,54 @@ const AIDashboard = () => {
           font-size: 0.9rem;
           font-weight: 500;
         }
+        
+        .main-chat-section {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+
+        /* HTML5 Details/Summary Styling */
+        .analysis-details {
+          width: 100%;
+          margin-top: 2rem;
+          margin-bottom: 2rem;
+        }
+        
+        .analysis-summary {
+          list-style: none; /* Hide default arrow */
+          padding: 1.25rem 1.5rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+        
+        .analysis-summary::-webkit-details-marker {
+          display: none;
+        }
+        
+        .analysis-summary:hover {
+          background: rgba(30, 41, 59, 0.9);
+        }
+        
+        .summary-indicator {
+          font-size: 0.85rem;
+          color: var(--text-muted);
+          background: rgba(255, 255, 255, 0.05);
+          padding: 0.25rem 0.75rem;
+          border-radius: 4px;
+        }
+
+        .analysis-details[open] .summary-indicator {
+          display: none;
+        }
+
+        .pt-6 {
+            padding-top: 1.5rem;
+        }
+
         .stats-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
